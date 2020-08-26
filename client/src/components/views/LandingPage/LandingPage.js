@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { FaCode } from "react-icons/fa";
 import { API_URL, API_KEY, IMAGE_BASE_URL} from './../../Config';
 import MainImage from './Section/MainImage';
+import GridCards from './../commons/GridCards';
+import { Row } from 'antd';
 
 function LandingPage() {
 
@@ -20,7 +22,12 @@ function LandingPage() {
         })
 
     }, []);
-
+    const gridcards = Movies.map((obj, idx)=>{
+        return <GridCards key={idx} 
+                movieId={obj.id} 
+                movieName={obj.original_title}
+                image={obj.poster_path ? `${IMAGE_BASE_URL}w300${obj.poster_path}` : null}/>
+    });
     return (
        <div style={{ width: '100%', margin: '0' }}>
            {/* Main image */}
@@ -34,7 +41,11 @@ function LandingPage() {
             <div style={{ width: '85%', margin: '1rem auto' }}>
                     <h2>Movies by lastest</h2>
                     <hr/>
-
+                    {Movies && 
+                    <Row gutter={[16, 16]}>
+                        {gridcards}
+                    </Row>
+                    }
                     {/* Movie Grid Cards */}
 
             </div>
