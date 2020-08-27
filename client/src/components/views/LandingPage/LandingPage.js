@@ -9,17 +9,10 @@ function LandingPage() {
 
     const [Movies, setMovies] = useState([]);
     const [MainMovie, setMainMovie] = useState(null);
+    const [CurrentPage, setCurrentPage] = useState(0);
     useEffect(() => {
-       //const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=ko&page=1`;
        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=ko&page=1`;
-
-        fetch(endpoint)
-        .then(res => res.json())
-        .then(res => {
-            console.log(res);
-            setMovies(res.results);
-            setMainMovie(res.results[0]);
-        })
+       fetchMovie(endpoint);
 
     }, []);
     const gridcards = Movies.map((obj, idx)=>{
@@ -28,6 +21,22 @@ function LandingPage() {
                 movieName={obj.original_title}
                 image={obj.poster_path ? `${IMAGE_BASE_URL}w300${obj.poster_path}` : null}/>
     });
+
+    const fetchMovie = (endpoint) => {
+        fetch(endpoint)
+        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+            setMovies([...Movies, ...res.results]);
+            if(CurrentPage == 0) setMainMovie(res.results[0]);            
+            setCurrentPage(res.page);
+        })
+    }
+
+    const loadMoreItems = () => {
+        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=ko&page=${CurrentPage+1}`;
+        fetchMovie(endpoint);
+    }
     return (
        <div style={{ width: '100%', margin: '0' }}>
            {/* Main image */}
@@ -51,7 +60,7 @@ function LandingPage() {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button>Load More</button>
+                <button onClick={loadMoreItems}>Load More</button>
             </div>
        </div>
     )
