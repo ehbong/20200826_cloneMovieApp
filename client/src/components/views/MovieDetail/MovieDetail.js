@@ -38,7 +38,7 @@ function MovieDetail(props) {
         return <React.Fragment key={idx}>
                     <GridCards  
                     characterName={obj.name}
-                    image={obj.profile_path ? `${IMAGE_BASE_URL}w500${obj.profile_path}` : null}/>
+                    image={obj.profile_path ? `${IMAGE_BASE_URL}w500${obj.profile_path}` : `http://localhost:5000/web/image/baseImage.jpg`}/>
                 </React.Fragment>
     });
 
