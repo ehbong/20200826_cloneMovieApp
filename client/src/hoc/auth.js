@@ -8,7 +8,8 @@ export default function (SpecificComponent, option, adminRoute = null) {
 
         let user = useSelector(state => state.user);
         const dispatch = useDispatch();
-
+        console.log("hoc");
+        console.log(user);
         useEffect(() => {
             //To know my current status, send Auth request 
             dispatch(auth()).then(response => {
