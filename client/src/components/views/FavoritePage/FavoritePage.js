@@ -9,9 +9,9 @@ function FavoritePage(props) {
 
     const [FavoriteMovies, setFavoriteMovies] = useState([]);
     const [Movies, setMovies] = useState([]);
-    const MoviesRef = useRef(Movies);
+    //const MoviesRef = useRef(Movies);
     let list = [];
-    MoviesRef.current = list;
+    //MoviesRef.current = list;
     const [Complate, setComplate] = useState(false);
     // const [User, setUser] = useState({});
     // if(props.user){
@@ -50,8 +50,8 @@ function FavoritePage(props) {
                                 // console.log(Movies.current);
                                 // console.log(Movies.current.length);
                                 // console.log(FavoriteMovies.length);
-                                if(MoviesRef.current.length == FavoriteMovies.length){
-                                    updateMovieList(MoviesRef.current);
+                                if(list.length == FavoriteMovies.length){
+                                    setMovies(list);
                                 }
                                 //setMovies({...Movies, })
                         })
@@ -62,8 +62,8 @@ function FavoritePage(props) {
     const updateMovieList = (obj) => {
         //console.log([...Movies, obj]);
         // MoviesRef.current = Movies.concat(obj);
-        console.log(MoviesRef.current);
-        setMovies(obj);
+        console.log(obj);
+        
     }
 
     const favoriteMovieList = Movies.map((data, idx) => {
