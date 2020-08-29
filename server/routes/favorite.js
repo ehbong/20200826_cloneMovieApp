@@ -23,6 +23,15 @@ router.post("/favorited", (req, res) => {
         })
 });
 
+router.post("/getFavoredMovie", (req, res) => {
+    Favorite.find({ 'userFrom': req.body.userFrom })
+        .exec((err, favorite) => {
+            if(err) return res.status(400).send({ success: false, err });
+            console.log(favorite);
+            return res.status(200).json({ success: true, favoriteList: favorite});
+        })
+});
+
 router.post("/unFavorite", (req, res) => {
     Favorite.findOneAndDelete({ 'movieTo': req.body.movieTo, 'userFrom': req.body.userFrom })
         .exec((err, doc) => {
