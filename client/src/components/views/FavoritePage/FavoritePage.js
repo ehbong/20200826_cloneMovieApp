@@ -4,6 +4,7 @@ import './Favorite.css';
 import Axios from 'axios';
 import { useSelector } from 'react-redux';
 import { withRouter } from "react-router-dom";
+import { Popover } from 'antd';
 
 function FavoritePage(props) {
 
@@ -20,11 +21,14 @@ function FavoritePage(props) {
     //const { userData } = useSelector(state => state.user);
     //console.log(props.user);
     useEffect(() => {
-        console.log(localStorage.getItem("userId"));
+        fetchFavoreMovie();
+    }, [])
+
+    const fetchFavoreMovie = ()=> {
         Axios.post('/api/favorite/getFavoredMovie', { userFrom: localStorage.getItem("userId") })
             .then(res => {
                 if(res.data.success){
-                    console.log(res.data.favoriteList);
+                    //console.log(res.data.favoriteList);
                     setFavoriteMovies(res.data.favoriteList);
                     console.log(FavoriteMovies);
                     
@@ -33,15 +37,15 @@ function FavoritePage(props) {
                     alert('즐겨찾기 정보를 받아오지 못했습니다.');
                 }
             })
-    }, [])
+    }
     useEffect(() => {
         FavoriteMovies.map((obj, idx) => {
-                        console.log(obj);
+                        //console.log(obj);
                         const endpointInfo = `${API_URL}movie/${obj.movieTo}?api_key=${API_KEY}&language=ko`;
                         fetch(endpointInfo)
                             .then(res => res.json())
                             .then(res => {
-                                console.log(res);
+                                //console.log(res);
                                 //const newList = Movies.concat(res);
                                 //setMovies(newList);
                                 //updateMovieList(res);
@@ -58,21 +62,37 @@ function FavoritePage(props) {
                         
                     });
     }, [FavoriteMovies])
-    
-    const updateMovieList = (obj) => {
-        //console.log([...Movies, obj]);
-        // MoviesRef.current = Movies.concat(obj);
-        console.log(obj);
-        
-    }
 
+    const onClickRemove = (movieId, userId) => {
+        console.log(movieId);
+        console.log(userId);
+        Axios.post("/api/favorite/unFavorite", {movieId: movieId, userFrom: userId})
+        .then(res => {
+            if(res.data.success){
+                fetchFavoreMovie();
+            } else {
+                alert('즐겨찾기 삭제를 못했습니다.');
+            }
+        })
+    }
     const favoriteMovieList = Movies.map((data, idx) => {
-                return <tr key={idx}>
+            //console.log(data);
+            const content = (
+                <div>
+                    {data.backdrop_path ?
+                        <img src={`${IMAGE_BASE_URL}w1280${data.backdrop_path}`} alt={`${data.original_title}`}/>
+                        : 'no image'
+                    }
+                </div>
+            )
+            return <tr key={idx}>
+                <Popover content={content} title={`${data.original_title}`}>
                     <td>{data.original_title}</td>
-                    <td>{data.runtime} min</td>
-                    <td></td>
-                </tr>
-            });
+                </Popover>
+                <td>{data.runtime} min</td>
+                <td><button onClick={()=> onClickRemove(data.id, localStorage.getItem("userId"))}>Remove</button></td>
+            </tr>
+        });
     return (
         <div style={{ width: '85%', margin: '3rem auto'}}>
             <h2>Favorite Movies</h2>
