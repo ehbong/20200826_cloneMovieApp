@@ -17,12 +17,13 @@ function LandingPage() {
     useEffect(() => {
        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=ko&page=1`;
        fetchMovie(endpoint);
+       // 이벤트 정상 작동하지 않음 추후 수정
        window.addEventListener('scroll', scrollHandler, true);
        return () => {
            window.removeEventListener('scroll', scrollHandler, true);
        }
     }, []);
-
+    // 이벤트 정상 작동하지 않음 추후 수정
     const scrollHandler = (e) => {
         console.log("스크롤 이벤트");
         if( document.body.scrollHeight == window.scrollY + window.innerHeight ) {
