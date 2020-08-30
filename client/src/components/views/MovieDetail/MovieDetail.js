@@ -19,7 +19,7 @@ function MovieDetail(props) {
     console.log(props);
     const endpointCrew = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}&language=ko`;
     const endpointInfo = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=ko`;
-
+    
     useEffect(() => {
         fetch(endpointInfo)
         .then(res => res.json())
@@ -42,6 +42,7 @@ function MovieDetail(props) {
         return <React.Fragment key={idx}>
                     <GridCards  
                     characterName={obj.name}
+                    castId={obj.id}
                     image={obj.profile_path ? `${IMAGE_BASE_URL}w500${obj.profile_path}` : `http://localhost:5000/web/image/baseImage.jpg`}/>
                 </React.Fragment>
     });

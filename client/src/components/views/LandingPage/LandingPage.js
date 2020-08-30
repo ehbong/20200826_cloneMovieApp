@@ -5,16 +5,31 @@ import MainImage from './Section/MainImage';
 import GridCards from './../commons/GridCards';
 import { Row } from 'antd';
 
-function LandingPage() {
+let currentPage = 0;
 
+function LandingPage() {
+    console.log("LandingPage");
     const [Movies, setMovies] = useState([]);
     const [MainMovie, setMainMovie] = useState(null);
     const [CurrentPage, setCurrentPage] = useState(0);
+
+    
     useEffect(() => {
        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=ko&page=1`;
        fetchMovie(endpoint);
-
+       window.addEventListener('scroll', scrollHandler, true);
+       return () => {
+           window.removeEventListener('scroll', scrollHandler, true);
+       }
     }, []);
+
+    const scrollHandler = (e) => {
+        console.log("스크롤 이벤트");
+        if( document.body.scrollHeight == window.scrollY + window.innerHeight ) {
+            console.log("스크롤 맨아래 이벤트 발생");
+            loadMoreItems();
+        }
+    }
     const gridcards = Movies.map((obj, idx)=>{
         return <GridCards key={idx} 
                 movieId={obj.id} 
@@ -28,17 +43,19 @@ function LandingPage() {
         .then(res => {
             console.log(res);
             setMovies([...Movies, ...res.results]);
-            if(CurrentPage == 0) setMainMovie(res.results[0]);            
+            if(currentPage == 0) setMainMovie(res.results[0]);
+            console.log(Movies);
             setCurrentPage(res.page);
         })
     }
 
     const loadMoreItems = () => {
+        console.log(CurrentPage);
         const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=ko&page=${CurrentPage+1}`;
         fetchMovie(endpoint);
     }
     return (
-       <div style={{ width: '100%', margin: '0' }}>
+       <div style={{ width: '100%', margin: '0' }} >
            {/* Main image */}
             {MainMovie && 
                 <MainImage 
