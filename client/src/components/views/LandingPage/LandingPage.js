@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { FaCode } from "react-icons/fa";
 import { API_URL, API_KEY, IMAGE_BASE_URL} from './../../Config';
 import MainImage from './Section/MainImage';
@@ -8,7 +8,7 @@ import { Row } from 'antd';
 let currentPage = 0;
 
 function LandingPage() {
-    console.log("LandingPage");
+    const buttonRef = useRef(null);
     const [Movies, setMovies] = useState([]);
     const [MainMovie, setMainMovie] = useState(null);
     const [CurrentPage, setCurrentPage] = useState(0);
@@ -28,7 +28,7 @@ function LandingPage() {
         console.log("스크롤 이벤트");
         if( document.body.scrollHeight == window.scrollY + window.innerHeight ) {
             console.log("스크롤 맨아래 이벤트 발생");
-            loadMoreItems();
+            buttonRef.current.click();
         }
     }
     const gridcards = Movies.map((obj, idx)=>{
@@ -44,7 +44,7 @@ function LandingPage() {
         .then(res => {
             console.log(res);
             setMovies([...Movies, ...res.results]);
-            if(currentPage == 0) setMainMovie(res.results[0]);
+            if(CurrentPage == 0) setMainMovie(res.results[0]);
             console.log(Movies);
             setCurrentPage(res.page);
         })
@@ -77,8 +77,8 @@ function LandingPage() {
 
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button onClick={loadMoreItems}>Load More</button>
+            <div style={{ display: 'none', justifyContent: 'center' }}>
+                <button ref={buttonRef} onClick={loadMoreItems}>Load More</button>
             </div>
        </div>
     )
