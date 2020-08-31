@@ -37,7 +37,7 @@ function CastDetail(props) {
             buttonRef.current.click();
         }
     }
-
+    // 출현작 카드 형식으로 보여주기
     const gridcards = CastMovieList.map((obj, idx)=>{
         return <GridCards key={idx} 
                 movieId={obj.id} 
