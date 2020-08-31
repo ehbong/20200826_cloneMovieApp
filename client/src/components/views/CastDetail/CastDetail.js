@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { API_URL, API_KEY, IMAGE_BASE_URL } from '../../Config';
 import { withRouter } from "react-router-dom";
 import CastInfo from "./Sections/CastInfo";
@@ -6,7 +6,7 @@ import GridCards from "./../commons/GridCards";
 import { Row } from 'antd';
 
 function CastDetail(props) {
-
+    const buttonRef = useRef(null);
     let castId = props.match.params.castId;
     const endpointsearchMovie = `${API_URL}discover/movie?api_key=${API_KEY}&language=ko&sort_by=popularity.desc&page=1&with_cast=${castId}`;
     const endpointCastInfo = `${API_URL}person/${castId}?api_key=${API_KEY}&language=ko`;
@@ -25,7 +25,19 @@ function CastDetail(props) {
             //setActor(res.cast);
         })
         fetchMovie(endpointsearchMovie);
+        // 스크롤 이벤트
+        window.addEventListener('scroll', scrollHandler, true);
+        return () => {
+            window.removeEventListener('scroll', scrollHandler, true);
+        }
     }, []);
+    // 스크롤 이벤트 핸들러
+    const scrollHandler = (e) => {
+        if( document.body.scrollHeight == window.scrollY + window.innerHeight ) {
+            buttonRef.current.click();
+        }
+    }
+
     const gridcards = CastMovieList.map((obj, idx)=>{
         return <GridCards key={idx} 
                 movieId={obj.id} 
@@ -69,8 +81,8 @@ function CastDetail(props) {
                     </Row>
                     }
             </div>}
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button onClick={loadMoreItems}>Load More</button>
+            <div style={{ display: 'none', justifyContent: 'center' }}>
+                <button ref={buttonRef} onClick={loadMoreItems}>Load More</button>
             </div>
         </div>
     )

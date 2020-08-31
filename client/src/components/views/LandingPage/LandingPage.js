@@ -17,17 +17,15 @@ function LandingPage() {
     useEffect(() => {
        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=ko&page=1`;
        fetchMovie(endpoint);
-       // 이벤트 정상 작동하지 않음 추후 수정
+       // 스크롤 이벤트
        window.addEventListener('scroll', scrollHandler, true);
        return () => {
            window.removeEventListener('scroll', scrollHandler, true);
        }
     }, []);
-    // 이벤트 정상 작동하지 않음 추후 수정
+    // 스크롤 이벤트 핸들러
     const scrollHandler = (e) => {
-        console.log("스크롤 이벤트");
         if( document.body.scrollHeight == window.scrollY + window.innerHeight ) {
-            console.log("스크롤 맨아래 이벤트 발생");
             buttonRef.current.click();
         }
     }
@@ -42,10 +40,8 @@ function LandingPage() {
         fetch(endpoint)
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             setMovies([...Movies, ...res.results]);
             if(CurrentPage == 0) setMainMovie(res.results[0]);
-            console.log(Movies);
             setCurrentPage(res.page);
         })
     }
